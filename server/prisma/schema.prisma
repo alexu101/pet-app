@@ -1,0 +1,186 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  name String
+  email String @unique
+  password String
+  role Role @default(CUSTOMER)
+  phone String
+  provider Provider?
+  customer Customer?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([phone])
+}
+
+model Customer {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  user User @relation(fields: [userId], references: [id])
+
+  pets Pet[]
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Provider {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int @unique
+
+  businessName String @unique
+  description String?
+  address String
+  city String
+  latitude Float
+  longitude Float
+  verified Boolean @default(false)
+  profileImage String?
+  bookings Booking[]
+  services Service[]
+  availability Availability[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([city])
+}
+
+model Availability {
+  id Int @id @default(autoincrement())
+  provider Provider @relation(fields: [providerId], references: [id])
+  providerId Int
+
+  weekDay WeekDay
+  startTime DateTime @db.Time()
+  endTime DateTime @db.Time()
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([providerId, weekDay])
+}
+
+model Pet{
+  id Int @id @default(autoincrement())
+  owner Customer @relation(fields: [ownerId], references: [id])
+  ownerId Int
+
+  name String
+  type Animal @default(DOG)
+  age Int?
+  breed String?
+  weight Int?
+  notes String?
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+}
+
+model Booking {
+  id Int @id @default(autoincrement())
+  customer Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+  provider Provider @relation(fields: [providerId], references: [id])
+  providerId Int
+  pet Pet @relation(fields: [petId], references: [id])
+  petId Int
+
+  date DateTime
+  startTime DateTime @db.Time()
+  endTime DateTime @db.Time()
+  status BookingStatus @default(CONFIRMED)
+  cancellationReason String?
+  total Float
+  notes String?
+  services BookedService[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([providerId, date])
+  @@index([customerId])
+  @@index([providerId])
+}
+
+model Service {
+  id Int @id @default(autoincrement())
+  bookings BookedService[]
+  provider Provider @relation(fields: [providerId], references: [id])
+  providerId Int
+
+  name String
+  price Float
+  duration Int
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([providerId, name])
+}
+
+model BookedService{
+  id Int @id @default(autoincrement())
+  booking Booking @relation(fields: [bookingId], references: [id])
+  bookingId Int
+  service Service @relation(fields: [serviceId], references: [id])
+  serviceId Int
+  price Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum BookingStatus {
+  CONFIRMED
+  REJECTED
+  CANCELLED_BY_CUSTOMER
+  CANCELLED_BY_PROVIDER
+  COMPLETED
+}
+
+enum Animal {
+  CAT
+  DOG
+  BIRD
+  OTHER
+}
+
+enum Role {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+}
+
+enum WeekDay {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
