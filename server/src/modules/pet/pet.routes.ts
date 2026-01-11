@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { createPet } from "./pet.controller.js";
+import { createPet, updatePet } from "./pet.controller.js";
 import { authorize } from "../../middlewares/authorization.js";
 import { requireCustomer } from "../../middlewares/requireCustomer.js";
 import { validate } from "../../middlewares/validatePayload.js";
-import { petValidationSchema } from "./pet.validation.js";
+import { petCreateValidationSchema, petUpdateValidationSchema } from "./pet.validation.js";
 
 const petRouter = Router()
 
-petRouter.post("/", validate(petValidationSchema), authorize, requireCustomer, createPet)
+petRouter.post("/", validate(petCreateValidationSchema), authorize, requireCustomer, createPet)
+petRouter.put("/:id", validate(petUpdateValidationSchema), authorize, requireCustomer, updatePet)
 
 export default petRouter;

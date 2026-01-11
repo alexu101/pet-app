@@ -8,3 +8,12 @@ export interface PetCreationPayload {
     weight?: number
     notes?: string
 }
+
+export interface PetUpdatePayload {
+    name?: string
+    type?: Animal
+    age?: number
+    breed?: string
+    weight?: number
+    notes?: string
+}
