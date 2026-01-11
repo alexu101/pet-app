@@ -1,7 +1,12 @@
 import { prisma } from "../../config/config.db.js"
-import { Role, User } from "../../generated/client.js"
-import { AuthRegisterPayload } from "../auth/auth.types.js"
-import { UserWithRelations } from "./user.types.js"
+import { Role, User } from "@prisma/client"
+import { AuthRegisterPayload, ProviderData } from "../auth/auth.types.js"
+import { UserWithRelations, UserWithRelationsAuth } from "./user.types.js"
+
+const relations = {
+    provider: true,
+    customer: true
+}
 
 export const userRepository = {
     async getUserByEmail(email: string): Promise<UserWithRelations | null> {
@@ -11,7 +16,17 @@ export const userRepository = {
             },
             omit: {
                 password: true
-            }
+            },
+            include: relations
+        })
+    },
+
+    async getUserByEmailAuth(email: string): Promise<UserWithRelationsAuth | null> {
+        return await prisma.user.findUnique({
+            where: {
+                email
+            },
+            include: relations
         })
     },
 
@@ -20,7 +35,8 @@ export const userRepository = {
         name: string,
         password: string,
         role: Role,
-        phone: string
+        phone: string,
+        providerData: ProviderData | undefined
     ):  Promise<UserWithRelations | null> {
         return prisma.user.create({
             data: {
@@ -28,11 +44,22 @@ export const userRepository = {
                 name,
                 password,
                 role,
-                phone
+                phone,
+                ...(role === "CUSTOMER" && {
+                    customer: {
+                        create: {}
+                    }
+                }),
+                ...(providerData && role === "PROVIDER" && {
+                    provider: {
+                        create: providerData
+                    }
+                })
             },
             omit: {
                 password: true
-            }
+            },
+            include: relations
         })
     }
 }

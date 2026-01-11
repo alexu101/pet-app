@@ -9,6 +9,7 @@ export const validate = <T extends z.ZodType>(schema: T) => {
                 params: req.params
             }) as any
 
+
             if (parsed.body) req.body = parsed.body
             if (parsed.params) req.params = parsed.params
 
