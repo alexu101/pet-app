@@ -2,7 +2,7 @@ import { email, z } from 'zod'
 
 export const registerValidationSchema = z.object({
     body: z.object({
-        name: z.string().min(6, 'Name must be at least 6 characters'),
+        name: z.string().min(6, 'Name must be at least 6 characters').max(30, 'Name must be at least 30 characters'),
         email: z.email('Invalid email'),
         password: z
             .string()

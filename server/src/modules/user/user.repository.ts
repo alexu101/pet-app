@@ -37,7 +37,7 @@ export const userRepository = {
         role: Role,
         phone: string,
         providerData: ProviderData | undefined
-    ):  Promise<UserWithRelations | null> {
+    ):  Promise<UserWithRelations> {
         return prisma.user.create({
             data: {
                 email,
