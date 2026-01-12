@@ -24,3 +24,15 @@ export const petUpdateValidationSchema = z.object({
         id: z.coerce.number().int().positive()
     })
 })
+
+export const petDeleteValidationSchema = z.object({
+    params: z.object({
+        id: z.coerce.number().int().positive()
+    })
+})
+
+export const getPetValidationSchema = z.object({
+    params: z.object({
+        id: z.coerce.number().int().positive()
+    })
+})

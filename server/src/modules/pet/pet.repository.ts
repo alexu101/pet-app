@@ -18,12 +18,36 @@ export const petRepository = {
         })
     },
 
+    async getPetById(id: number): Promise<Pet | null> {
+        return prisma.pet.findUnique({
+            where: {
+                id
+            }
+        })
+    },
+
+    async getAllUserPets(ownerId: number): Promise<Pet[]> {
+        return await prisma.pet.findMany({
+            where: {
+                ownerId
+            }
+        })
+    },
+
     async updatePet(petUpdates: PetUpdatePayload, id: number): Promise<Pet | null> {
         return prisma.pet.update({
             where: {
                 id
             },
             data: petUpdates
+        })
+    },
+
+    async deletePet(id: number): Promise<Pet | null> {
+        return await prisma.pet.delete({
+            where: {
+                id
+            }
         })
     }
 }
