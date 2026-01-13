@@ -7,5 +7,13 @@ export const providerRepository = {
         return await prisma.provider.findMany({
             where: filters
         })
+    },
+
+    async getProviderByUserId(userId: number): Promise<Provider | null> {
+        return await prisma.provider.findUnique({
+            where: {
+                userId
+            }
+        })
     }
 }

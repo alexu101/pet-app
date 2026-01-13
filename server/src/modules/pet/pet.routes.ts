@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createPet, deletePet, getAllUserPets, getPetById, updatePet } from "./pet.controller.js";
 import { authorize } from "../../middlewares/authorization.js";
-import { requireCustomer } from "../../middlewares/requireCustomer.js";
+import { requireCustomer } from "../../middlewares/requirePrivilege.js";
 import { validate } from "../../middlewares/validatePayload.js";
 import { getPetValidationSchema, petCreateValidationSchema, petDeleteValidationSchema, petUpdateValidationSchema } from "./pet.validation.js";
 
