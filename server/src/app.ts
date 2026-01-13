@@ -3,6 +3,7 @@ import { errorHandler } from './middlewares/errorHandler.js'
 import authRouter from './modules/auth/auth.routes.js'
 import { authorize } from './middlewares/authorization.js'
 import petRouter from './modules/pet/pet.routes.js'
+import providerRouter from './modules/provider/provider.routes.js'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.get('/',authorize, (req, res, next: NextFunction) => {
 
 app.use("/api/auth", authRouter)
 app.use("/api/pets", petRouter)
+app.use("/api/providers", providerRouter)
 
 app.use(errorHandler)
 

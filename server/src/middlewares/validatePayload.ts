@@ -6,12 +6,13 @@ export const validate = <T extends z.ZodType>(schema: T) => {
         try {
             const parsed = schema.parse({
                 body: req.body,
-                params: req.params
+                params: req.params,
+                query: req.query
             }) as any
-
 
             if (parsed.body) req.body = parsed.body
             if (parsed.params) req.params = parsed.params
+            if (parsed.query) req.queryParams = parsed.query
 
             next()
         } catch (err) {
@@ -25,6 +26,7 @@ export const validate = <T extends z.ZodType>(schema: T) => {
                     }))
                 })
             }
+            next(err)
         }
     }
 }

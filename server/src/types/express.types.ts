@@ -6,6 +6,7 @@ declare global {
         interface Request {
             claims?: UserClaims
             customer?: Customer
+            queryParams?: Record<string, any>
         }
     }
 }

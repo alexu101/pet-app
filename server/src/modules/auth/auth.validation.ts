@@ -21,7 +21,7 @@ export const registerValidationSchema = z.object({
             city: z.string().min(1, 'City is mandatory'),
             latitude: z.float64(),
             longitude: z.float64(),
-            verfied: z.boolean().default(false),
+            verified: z.boolean().default(false),
             profileImage: z.base64url().optional()
         }).optional()
     })
