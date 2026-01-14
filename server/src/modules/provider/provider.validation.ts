@@ -13,7 +13,7 @@ export const validateProviderAddServiceSchema = z.object({
         duration: z.number().int().min(0, "Duration must be at least 1 minute"),
         active: z.boolean().default(true)
     }),
-    params: {
-        id: z.number().int()
-    }
+    params: z.object({
+        id: z.coerce.number().int()
+    })
 })

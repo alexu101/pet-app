@@ -40,11 +40,11 @@ export const addService = async (req: Request, res: Response, next: NextFunction
         const service = await serviceRepository.createService(serviceData)
 
         if(!service)
-            throw new Error(`Service for user with id: ${providerId}, could not be added`)
+            throw new Error(`Service for provider with id: ${providerId}, could not be added`)
 
         const response: ApiResponse<Service> = {
             success: true,
-            message: `Service added successfully to user with id: ${3}`,
+            message: `Service added successfully to provider with id: ${providerId}`,
             data: service
         }
 

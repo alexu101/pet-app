@@ -68,6 +68,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         if(!passwordsMatch)
             throw new BadRequest("Invalid password")
 
+        const {password, ...userWithoutPassword} = user
+
         const tokenPayload: TokenPayload = {
             sub: user.id,
             role: user.role
@@ -79,7 +81,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
             success: true,
             message: "User logged in successfully",
             data: {
-                user,
+                user: userWithoutPassword,
                 token
             }
         }

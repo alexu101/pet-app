@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express"
 import CustomError from "../errors/CustomError.js"
 import ApiResponse from "../types/apiResponse.types.js"
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client"
+import { parseUniqueConstraintError } from "../utils/parsePrismaErrorMessage.js"
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
 
@@ -11,6 +13,14 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
     if (err instanceof CustomError) {
         errorType = err.type
         errorStatusCode = err.statusCode
+    } else if(err instanceof PrismaClientKnownRequestError) {
+        switch (err.code) {
+            case "P2002":
+                errorMessage = parseUniqueConstraintError(err)
+                break
+            default:
+                break
+        }
     }
 
     const response: ApiResponse<null> = {
