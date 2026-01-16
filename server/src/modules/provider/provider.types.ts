@@ -6,8 +6,14 @@ export interface ProvidersFilters {
 
 export type ProviderWithRelations = Prisma.ProviderGetPayload<{
     include: {
-        availability: true
-        services: true,
-        bookings: true
+        availability?: true
+        services?: true,
+        bookings?: true
     }
 }>
+
+export interface ProviderRelations {
+    availability?: true,
+    services?: true,
+    bookings?: true
+}

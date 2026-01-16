@@ -10,7 +10,7 @@ const relations = {
 
 export const userRepository = {
     async getUserByEmail(email: string): Promise<UserWithRelations | null> {
-        return await prisma.user.findUnique({
+        return prisma.user.findUnique({
             where: {
                 email
             },
@@ -22,7 +22,7 @@ export const userRepository = {
     },
 
     async getUserByEmailAuth(email: string): Promise<UserWithRelationsAuth | null> {
-        return await prisma.user.findUnique({
+        return prisma.user.findUnique({
             where: {
                 email
             },

@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { ProvidersFilters } from "./provider.types.js";
+import { ProviderRelations, ProvidersFilters, ProviderWithRelations } from "./provider.types.js";
 import { providerRepository } from "./provider.repository.js";
 import ApiResponse from "../../types/apiResponse.types.js";
 import { Availability, Provider, Service } from "@prisma/client";
 import { ServiceCreationPayload } from "../service/service.types.js";
 import { serviceRepository } from "../service/service.repository.js";
 import { AvailabilityCreationPayload } from "../availability/availability.types.js";
-import { availabilityRepo } from "../availability/availability.repository.js";
+import { availabilityRepository } from "../availability/availability.repository.js";
 
 export const getProviders = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -71,24 +71,47 @@ export const addAvailability = async (req: Request, res: Response, next: NextFun
             endTime
         }
 
-        const newAvailability = await availabilityRepo.createAvailability(availabilityData)
+        const newAvailability = await availabilityRepository.createAvailability(availabilityData)
 
         if(!newAvailability)
             throw new Error(`Availability for provider with id: ${providerId}, could not be added`)
 
-        const updatedProvider = await providerRepository.getProviderByIdWithRelations(providerId)
+        const relations: ProviderRelations = {
+            availability: true
+        }
 
-        if(!updatedProvider)
-            throw new Error("Provider with updated availability could not be retrieved")
+        const providerAvailability = await availabilityRepository.getAllAvailabilityByProviderId(providerId)
 
         const response: ApiResponse<Availability[]> = {
             success: true,
             message: `Availability added successfully to provider with id: ${providerId}`,
-            data: updatedProvider.availability
+            data: providerAvailability
         }
 
         res.status(201).json(response)
     } catch (err) {
+        next(err)
+    }
+}
+
+export const getProviderById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = parseInt(req.params.id as string)
+        const relationsFilters = req.queryParams as ProviderRelations
+
+        const provider = await providerRepository.getProviderById(id, relationsFilters)
+
+        if(!provider)
+            throw new Error("Provider could not be retrieved")
+
+        const response: ApiResponse<ProviderWithRelations> = {
+            success: true,
+            message: "Provider retrieved successfully",
+            data: provider
+        }
+
+        res.status(200).json(response)
+    } catch(err) {
         next(err)
     }
 }

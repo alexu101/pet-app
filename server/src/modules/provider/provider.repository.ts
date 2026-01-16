@@ -1,30 +1,24 @@
 import { Provider } from "@prisma/client";
 import { prisma } from "../../config/config.db.js";
-import { ProvidersFilters, ProviderWithRelations } from "./provider.types.js";
-
-const relations = {
-    availability: true,
-    services: true,
-    bookings: true
-}
+import { ProviderRelations, ProvidersFilters, ProviderWithRelations } from "./provider.types.js";
 
 export const providerRepository = {
     async getProviders(filters: ProvidersFilters): Promise<Provider[]> {
-        return await prisma.provider.findMany({
+        return prisma.provider.findMany({
             where: filters
         })
     },
 
     async getProviderByUserId(userId: number): Promise<Provider | null> {
-        return await prisma.provider.findUnique({
+        return prisma.provider.findUnique({
             where: {
                 userId
             }
         })
     },
 
-    async getProviderByIdWithRelations(id: number): Promise<ProviderWithRelations | null> {
-        return await prisma.provider.findUnique({
+    async getProviderById(id: number, relations: ProviderRelations ): Promise<ProviderWithRelations | null> {
+        return prisma.provider.findUnique({
             where: {
                 id
             },

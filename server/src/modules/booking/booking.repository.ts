@@ -8,7 +8,7 @@ export const bookingRepository = {
         providerId: number,
         customerId: number
     }): Promise<Booking | null> {
-        return await prisma.booking.create({
+        return prisma.booking.create({
             data: bookingPayload
         })
     }

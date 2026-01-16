@@ -27,7 +27,7 @@ export const petRepository = {
     },
 
     async getAllUserPets(ownerId: number): Promise<Pet[]> {
-        return await prisma.pet.findMany({
+        return prisma.pet.findMany({
             where: {
                 ownerId
             }
@@ -44,7 +44,7 @@ export const petRepository = {
     },
 
     async deletePet(id: number): Promise<Pet | null> {
-        return await prisma.pet.delete({
+        return prisma.pet.delete({
             where: {
                 id
             }

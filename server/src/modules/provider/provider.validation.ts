@@ -35,3 +35,14 @@ export const validateProviderAddAvailabilitySchema = z.object({
         path: ["startTime", "endTime"]
     })
 })
+
+export const validateGetProviderByIdSchema = z.object({
+    params: z.object({
+        id: z.coerce.number().int()
+    }),
+    query: z.object({
+        services: z.literal("true", "Services filter can be true or non existent").transform(()=> true).optional(),
+        availability: z.literal("true", "Availability filter can be true or non existent").transform(()=> true).optional(),
+        bookings: z.literal("true", "Bookings filter can be true or non existent").transform(()=> true).optional()
+    })
+})
