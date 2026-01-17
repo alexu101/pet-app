@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ProviderRelations, ProvidersFilters, ProviderWithRelations } from "./provider.types.js";
+import { ProviderDisponibilityPayload, ProviderRelations, ProvidersFilters, ProviderWithRelations } from "./provider.types.js";
 import { providerRepository } from "./provider.repository.js";
 import ApiResponse from "../../types/apiResponse.types.js";
 import { Availability, Provider, Service } from "@prisma/client";
@@ -114,4 +114,21 @@ export const getProviderById = async (req: Request, res: Response, next: NextFun
     } catch(err) {
         next(err)
     }
+}
+
+export const getBookingDisponibility = async (req: Request, res: Response, next: NextFunction) => {
+    //userul trimite serviciile
+    //primeste inapoi toate intervalele disponibile din ziua in care se poate cel mai repede
+
+    const servicesIds = req.body.servicesId as number[]
+
+    const services = await serviceRepository.getMultipleServicesByIds(servicesIds)
+
+    const totalPay = services.reduce((sum, service) => sum + service.price, 0)
+    const totalTime = services.reduce((sum, service) => sum + service.duration, 0)
+
+    if(!totalTime)
+        throw new Error("Selected services unavailable")
+
+    const disponibility = computeDisponibility(services, provider)
 }

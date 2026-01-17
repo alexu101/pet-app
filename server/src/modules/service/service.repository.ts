@@ -7,5 +7,12 @@ export const serviceRepository = {
         return prisma.service.create({
             data: payload
         })
+    },
+    async getMultipleServicesByIds(ids: number[]): Promise<Service[]> {
+        return prisma.service.findMany({
+            where: {
+                id: {in : ids}
+            }
+        })
     }
 }
