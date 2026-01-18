@@ -17,7 +17,7 @@ export const validateProviderAddServiceSchema = z.object({
     })
 })
 
-export const validateProviderAddAvailabilitySchema = z.object({
+export const validateProviderAddWorkingScheduleSchema = z.object({
     body: z.object({
         weekDay: z.enum([
             "MONDAY",
@@ -42,7 +42,7 @@ export const validateGetProviderByIdSchema = z.object({
     }),
     query: z.object({
         services: z.literal("true", "Services filter can be true or non existent").transform(()=> true).optional(),
-        availability: z.literal("true", "Availability filter can be true or non existent").transform(()=> true).optional(),
+        workingSchedule: z.literal("true", "WorkingSchedule filter can be true or non existent").transform(()=> true).optional(),
         bookings: z.literal("true", "Bookings filter can be true or non existent").transform(()=> true).optional()
     })
 })

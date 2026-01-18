@@ -7,3 +7,8 @@ export interface BookingCreationPayload {
     status: BookingStatus
     total: number
 }
+
+export interface BookingTime {
+    startTime: Date,
+    endTime: Date
+}

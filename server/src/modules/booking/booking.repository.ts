@@ -11,5 +11,17 @@ export const bookingRepository = {
         return prisma.booking.create({
             data: bookingPayload
         })
+    },
+
+    async getBookingsByProviderIdAndDate(providerId: number, date: Date) {
+        return prisma.booking.findMany({
+            where: {
+                providerId,
+                date
+            },
+            orderBy: {
+                updatedAt: 'asc'
+            }
+        })
     }
 }

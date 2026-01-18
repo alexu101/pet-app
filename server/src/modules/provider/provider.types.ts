@@ -1,19 +1,20 @@
 import { Prisma } from "@prisma/client"
 
 export interface ProvidersFilters {
-    city?: string
+    city: string,
+    serviceIds: number[]
 }
 
 export type ProviderWithRelations = Prisma.ProviderGetPayload<{
     include: {
-        availability?: true
+        workingSchedule?: true
         services?: true,
         bookings?: true
     }
 }>
 
 export interface ProviderRelations {
-    availability?: true,
+    workingSchedule?: true,
     services?: true,
     bookings?: true
 }
